@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Futbol Maç Simülasyonu</title>
+  <style>
+    body {
+      margin: 0;
+      background: #222;
+      font-family: Arial, sans-serif;
+      color: white;
+      text-align: center;
+    }
+    h1 {
+      margin-top: 10px;
+    }
+    #field {
+      margin: 20px auto;
+      width: 800px;
+      height: 500px;
+      background: green;
+      border: 5px solid white;
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .player, .opponent {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: bold;
+    }
+    .player {
+      background: white;
+      color: black;
+      border: 2px solid black;
+    }
+    .opponent {
+      background: red;
+      color: white;
+    }
+    #scoreboard {
+      margin-top: 20px;
+      font-size: 20px;
+    }
+    #goalText {
+      margin-top: 10px;
+      font-size: 18px;
+      height: 30px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 20px 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>⚽ Maç Simülasyonu - Büyük Geri Dönüş ⚽</h1>
+
+  <div id="field"></div>
+
+  <div id="scoreboard">Skor: Rakip 3 - 0 Biz</div>
+  <div id="goalText"></div>
+  <button onclick="startMatch()">Maçı Başlat</button>
+
+  <script>
+    const players = [
+      { name: "Emir", x: 50, y: 230 },
+      { name: "Umut Jk", x: 150, y: 150 },
+      { name: "Umut 1903", x: 150, y: 300 },
+      { name: "Kuzey", x: 150, y: 400 },
+      { name: "Yunus", x: 220, y: 230 },
+      { name: "Gomezonur", x: 300, y: 150 },
+      { name: "Kötü Rüzgar", x: 300, y: 300 },
+      { name: "Ebubekir", x: 400, y: 230 },
+      { name: "Samet Muslu", x: 500, y: 100 },
+      { name: "Deno", x: 500, y: 350 },
+      { name: "Gergin Kartal", x: 600, y: 230 }
+    ];
+
+    const goals = [
+      { minute: "50'", scorer: "Gergin Kartal", score: "Rakip 3 - 1 Biz" },
+      { minute: "60'", scorer: "Deno", score: "Rakip 3 - 2 Biz" },
+      { minute: "70'", scorer: "Ebubekir", score: "Rakip 3 - 3 Biz" },
+      { minute: "85'", scorer: "Gomezonur", score: "Rakip 3 - 4 Biz" }
+    ];
+
+    const field = document.getElementById("field");
+
+    // Oyuncuları çiz
+    function drawPlayers() {
+      field.innerHTML = "";
+      players.forEach(p => {
+        const div = document.createElement("div");
+        div.className = "player";
+        div.innerText = p.name;
+        div.style.left = p.x + "px";
+        div.style.top = p.y + "px";
+        field.appendChild(div);
+      });
+
+      // Rakip oyuncular
+      for (let i = 0; i < 11; i++) {
+        const x = 700 - Math.random() * 100;
+        const y = 40 + i * 40;
+        const opp = document.createElement("div");
+        opp.className = "opponent";
+        opp.innerText = "Rakip";
+        opp.style.left = x + "px";
+        opp.style.top = y + "px";
+        field.appendChild(opp);
+      }
+    }
+
+    // Maç senaryosu başlasın
+    function startMatch() {
+      let i = 0;
+      let score = "Rakip 3 - 0 Biz";
+      document.getElementById("scoreboard").innerText = "Skor: " + score;
+      document.getElementById("goalText").innerText = "İkinci yarı başlıyor...";
+      drawPlayers();
+
+      const interval = setInterval(() => {
+        if (i >= goals.length) {
+          document.getElementById("goalText").innerText = "Maç bitti! Müthiş bir geri dönüş!";
+          clearInterval(interval);
+          return;
+        }
+        const goal = goals[i];
+        document.getElementById("scoreboard").innerText = "Skor: " + goal.score;
+        document.getElementById("goalText").innerText = `${goal.minute} GOOOL! ${goal.scorer}!`;
+        i++;
+      }, 2000);
+    }
+
+    drawPlayers();
+  </script>
+</body>
+</html>
