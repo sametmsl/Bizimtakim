@@ -2,146 +2,154 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8" />
-  <title>Futbol Maç Simülasyonu</title>
+  <title>Maç Simülasyonu - Geri Dönüş</title>
   <style>
     body {
       margin: 0;
-      background: #222;
       font-family: Arial, sans-serif;
+      background: #111;
       color: white;
       text-align: center;
     }
     h1 {
-      margin-top: 10px;
+      margin: 10px;
     }
     #field {
+      width: 700px;
+      height: 438px;
       margin: 20px auto;
-      width: 800px;
-      height: 500px;
-      background: green;
-      border: 5px solid white;
+      background: url('images (2).png') no-repeat center center;
+      background-size: cover;
       position: relative;
-      border-radius: 10px;
-      overflow: hidden;
+      border: 5px solid white;
     }
-    .player, .opponent {
+    .player {
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      position: absolute;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 10px;
-      font-weight: bold;
-    }
-    .player {
       background: white;
       color: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 8px;
+      font-weight: bold;
+      position: absolute;
       border: 2px solid black;
+      transition: all 1s ease;
     }
     .opponent {
       background: red;
       color: white;
     }
     #scoreboard {
-      margin-top: 20px;
       font-size: 20px;
+      margin-top: 10px;
     }
     #goalText {
-      margin-top: 10px;
       font-size: 18px;
-      height: 30px;
+      margin-top: 5px;
+      height: 25px;
     }
     button {
+      margin: 15px 5px;
       padding: 10px 20px;
       font-size: 16px;
-      margin: 20px 5px;
       cursor: pointer;
     }
   </style>
 </head>
 <body>
 
-  <h1>⚽ Maç Simülasyonu - Büyük Geri Dönüş ⚽</h1>
+<h1>⚽ Maç Simülasyonu: Geri Dönüş! ⚽</h1>
+<div id="field"></div>
+<div id="scoreboard">Skor: Rakip 3 - 0 Biz</div>
+<div id="goalText"></div>
+<button onclick="startMatch()">Maçı Başlat</button>
 
-  <div id="field"></div>
+<script>
+  const field = document.getElementById("field");
 
-  <div id="scoreboard">Skor: Rakip 3 - 0 Biz</div>
-  <div id="goalText"></div>
-  <button onclick="startMatch()">Maçı Başlat</button>
+  const players = [
+    { name: "Emir", x: 50, y: 190 },
+    { name: "Umut Jk", x: 130, y: 100 },
+    { name: "Umut 1903", x: 130, y: 280 },
+    { name: "Yunus", x: 160, y: 190 },
+    { name: "Kuzey", x: 130, y: 350 },
+    { name: "Gomezonur", x: 260, y: 130 },
+    { name: "Kötü Rüzgar", x: 260, y: 250 },
+    { name: "Ebubekir", x: 330, y: 190 },
+    { name: "Samet Muslu", x: 430, y: 100 },
+    { name: "Deno", x: 430, y: 280 },
+    { name: "Gergin Kartal", x: 530, y: 190 }
+  ];
 
-  <script>
-    const players = [
-      { name: "Emir", x: 50, y: 230 },
-      { name: "Umut Jk", x: 150, y: 150 },
-      { name: "Umut 1903", x: 150, y: 300 },
-      { name: "Kuzey", x: 150, y: 400 },
-      { name: "Yunus", x: 220, y: 230 },
-      { name: "Gomezonur", x: 300, y: 150 },
-      { name: "Kötü Rüzgar", x: 300, y: 300 },
-      { name: "Ebubekir", x: 400, y: 230 },
-      { name: "Samet Muslu", x: 500, y: 100 },
-      { name: "Deno", x: 500, y: 350 },
-      { name: "Gergin Kartal", x: 600, y: 230 }
-    ];
+  const goalEvents = [
+    { scorer: "Gergin Kartal", score: "Rakip 3 - 1 Biz" },
+    { scorer: "Deno", score: "Rakip 3 - 2 Biz" },
+    { scorer: "Ebubekir", score: "Rakip 3 - 3 Biz" },
+    { scorer: "Gomezonur", score: "Rakip 3 - 4 Biz" }
+  ];
 
-    const goals = [
-      { minute: "50'", scorer: "Gergin Kartal", score: "Rakip 3 - 1 Biz" },
-      { minute: "60'", scorer: "Deno", score: "Rakip 3 - 2 Biz" },
-      { minute: "70'", scorer: "Ebubekir", score: "Rakip 3 - 3 Biz" },
-      { minute: "85'", scorer: "Gomezonur", score: "Rakip 3 - 4 Biz" }
-    ];
+  let playerDivs = [];
 
-    const field = document.getElementById("field");
+  function createPlayers() {
+    field.innerHTML = "";
+    playerDivs = [];
 
-    // Oyuncuları çiz
-    function drawPlayers() {
-      field.innerHTML = "";
-      players.forEach(p => {
-        const div = document.createElement("div");
-        div.className = "player";
-        div.innerText = p.name;
-        div.style.left = p.x + "px";
-        div.style.top = p.y + "px";
-        field.appendChild(div);
+    players.forEach(p => {
+      const div = document.createElement("div");
+      div.className = "player";
+      div.innerText = p.name;
+      div.style.left = p.x + "px";
+      div.style.top = p.y + "px";
+      field.appendChild(div);
+      playerDivs.push(div);
+    });
+
+    // Rakip takım (11 kırmızı yuvarlak)
+    for (let i = 0; i < 11; i++) {
+      const opp = document.createElement("div");
+      opp.className = "player opponent";
+      opp.innerText = "Rakip";
+      opp.style.left = (600 + Math.random() * 50) + "px";
+      opp.style.top = (20 + i * 35) + "px";
+      field.appendChild(opp);
+    }
+  }
+
+  function startMatch() {
+    createPlayers();
+    document.getElementById("scoreboard").innerText = "Skor: Rakip 3 - 0 Biz";
+    document.getElementById("goalText").innerText = "İkinci yarı başladı!";
+
+    let i = 0;
+
+    const interval = setInterval(() => {
+      if (i >= goalEvents.length) {
+        document.getElementById("goalText").innerText = "Maç bitti! Müthiş bir geri dönüş!";
+        clearInterval(interval);
+        return;
+      }
+
+      const event = goalEvents[i];
+      document.getElementById("scoreboard").innerText = "Skor: " + event.score;
+      document.getElementById("goalText").innerText = `GOOOL! ${event.scorer}!`;
+
+      // Oyuncuları hafif hareket ettir
+      playerDivs.forEach(div => {
+        const dx = Math.random() * 20 - 10;
+        const dy = Math.random() * 20 - 10;
+        div.style.left = (parseFloat(div.style.left) + dx) + "px";
+        div.style.top = (parseFloat(div.style.top) + dy) + "px";
       });
 
-      // Rakip oyuncular
-      for (let i = 0; i < 11; i++) {
-        const x = 700 - Math.random() * 100;
-        const y = 40 + i * 40;
-        const opp = document.createElement("div");
-        opp.className = "opponent";
-        opp.innerText = "Rakip";
-        opp.style.left = x + "px";
-        opp.style.top = y + "px";
-        field.appendChild(opp);
-      }
-    }
+      i++;
+    }, 2000);
+  }
 
-    // Maç senaryosu başlasın
-    function startMatch() {
-      let i = 0;
-      let score = "Rakip 3 - 0 Biz";
-      document.getElementById("scoreboard").innerText = "Skor: " + score;
-      document.getElementById("goalText").innerText = "İkinci yarı başlıyor...";
-      drawPlayers();
+  createPlayers();
+</script>
 
-      const interval = setInterval(() => {
-        if (i >= goals.length) {
-          document.getElementById("goalText").innerText = "Maç bitti! Müthiş bir geri dönüş!";
-          clearInterval(interval);
-          return;
-        }
-        const goal = goals[i];
-        document.getElementById("scoreboard").innerText = "Skor: " + goal.score;
-        document.getElementById("goalText").innerText = `${goal.minute} GOOOL! ${goal.scorer}!`;
-        i++;
-      }, 2000);
-    }
-
-    drawPlayers();
-  </script>
 </body>
 </html>
